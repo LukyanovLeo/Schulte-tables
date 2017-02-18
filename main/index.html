@@ -1,0 +1,153 @@
+<html>
+<head>
+	<script src="three.min.js"></script>
+	<script src="../build/three.min.js"></script>
+
+	<script src="js/renderers/Projector.js"></script>
+	<script src="js/renderers/CanvasRenderer.js"></script>
+
+	<script src="js/libs/stats.min.js"></script>
+	<script src="js/libs/tween.min.js"></script>
+	<script src="dat.gui.js"></script>
+</head>
+<body>
+<div>
+  <label for="max-value">Enter max value:</label>
+  <input type="text" id="max-value" />
+  <input id="myElement" type="button" value="Show particles"/>
+</div>
+<div id="Stats-output"></div>
+<script>
+	var container;
+	var camera, scene, renderer, particle;
+	//если пользователь не задаст значение, будет 1000 частиц
+	var max_value; 
+
+	document.getElementById('myElement').onclick = function() {
+		max_value = document.getElementById("max-value").value;
+		if (isNaN(max_value) || (max_value > 5000) || (max_value < 1))
+			max_value = 1500;
+		init();
+		animate();    
+	}
+
+	function init() {
+
+		container = document.createElement('div');
+		document.body.appendChild( container );
+		
+		scene = new THREE.Scene();
+		camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
+		camera.position.x = 0;
+		camera.position.y = 0;
+		camera.position.z = 1000;
+		
+		
+		var geometry = new THREE.CubeGeometry(0.75, 0.75, 0.75);	
+		var material = new THREE.MeshLambertMaterial( { color:  Math.random() * 0xffffff  } ) ;
+		
+		//цикл создания частиц заданного количества	
+		for (var i = 0; i < max_value; i++) {
+
+			particle = new THREE.Mesh(geometry, material);
+			//чем на большее число умножим i(значиние delay), тем медленнее будут испускаться частицы из эмиттера
+			initParticle(particle, i*10); 
+			scene.add(particle);
+		}
+		var ambientLight = new THREE.AmbientLight(0x0c0c0c);
+        scene.add(ambientLight);
+		
+		var spotlight = new THREE.SpotLight(0xffffff);
+		spotlight.position.set(0, 100, 1000);
+		spotlight.angle = Math.PI;
+		scene.add(spotlight);
+        // add spotlight for the shadows
+    
+		renderer = new THREE.WebGLRenderer();
+		renderer.setClearColor(Math.random() * 0xffffff );	
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		container.appendChild(renderer.domElement);
+	}
+	//для управления скоростью вращения частиц
+	var controls = new function() {
+        this.rotationSpeed = 0.005;        
+    }
+	var gui = new DAT.GUI();
+    gui.add(controls, 'rotationSpeed',0,0.3);
+		
+	function onWindowResize() {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+
+		renderer.setSize(window.innerWidth, window.innerHeight);
+	}
+	//создаем область canvas, где будут наши частицы
+	function generateCanvas() {
+		var canvas = document.createElement('canvas');
+		canvas.width = 16;
+		canvas.height = 16;
+
+		var context = canvas.getContext('2d');
+		context.fillRect( 0, 0, canvas.width, canvas.height );
+
+		return canvas;
+
+	}
+	//функция, отвечающая за эмиттер
+	function initParticle(particle, delay) {
+		//Вызов instanceof возвращает true, если объект принадлежит классу THREE.Mesh или его родителям
+		//переменная для частицы
+		var particle = this instanceof THREE.Mesh ? this : particle;  
+		//переменная для эмиттера, из которого исходят частицы, начальная точка
+		var delay = delay !== undefined ? delay : 0; 
+		//задаем начальное положение частиц		
+		particle.position.x = 0;
+		particle.position.y = 0;
+		particle.position.z = 0;
+		//задаем увеличение объектов в перспективе, когда они приближаются к нам. 
+		//чем объект ближе, тем больше он кажется
+		particle.scale.x = particle.scale.y = particle.scale.z = Math.random() * 32 + 16;
+		
+		//tween.js — это анимация в Canvas		
+		new TWEEN.Tween(particle)
+			.delay(delay)      //где создавать новую частицу
+			.to( {}, 10000 )    //где она умирает
+			.start();
+		new TWEEN.Tween(particle.position)
+			.delay(delay)        //откуда начать движение
+			.to( { 
+				x: Math.random() * 4000 - 2000, 
+				y: Math.random() * 1000 - 500, 
+				z: Math.random() * 4000 - 2000 
+			}, 10000 ) //куда двигаться, траектория
+			.start();
+		new TWEEN.Tween(particle.scale)
+			.delay( delay )          //откуда начать зрительно приближать частицу
+			.to( {
+				x: 0.01, 
+				y: 0.01,
+				z: 0.01
+			}, 10000 ) //насколько приближать, и до куда продолжать это
+			.start();
+
+	}
+	function animate() {
+		requestAnimationFrame(animate);
+		render();
+	}
+	function render() {
+		TWEEN.update();
+		scene.traverse(function(e) {
+		if (e instanceof THREE.Mesh) {
+				e.rotation.x += controls.rotationSpeed;
+				e.rotation.y += controls.rotationSpeed;
+				e.rotation.z += controls.rotationSpeed;
+			}
+		});
+		camera.lookAt(scene.position);
+		renderer.render(scene, camera);
+	}
+
+</script>
+</body>
+</head>
