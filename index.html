@@ -1,27 +1,19 @@
 <!DOCTYPE html> 
-<html>
-<head>
+  <head>
   	<meta charset="utf-8">
-</head>  
+    <link href="styles.css" rel="stylesheet">
+  </head>  
 
-<body>
-	<div>Генерация нейронной сети. Введите кол-во узлов в соответствующую форму.</div>
-	</br>
-	<div>
-		<input id="amount" type="text" value="5"/> Кол-во нейронов
-	</div>
-	<div>
-		<input id="learn" type="button" value="Обучение"/>		
-		<input id="run" type="button" value="Работа"/>
-	</div>
-	</br>
-	<div>
-		
-	</div>
-	<div id="result"></div>
-	<script src="jquery-1.11.3.min.js"></script>
-	<script src="constants.js"></script>
-	<script src="functions.js"></script>
-	<script src="main.js"></script>
-</body>
+  <body>
+  <div id="videoDiv">
+      <input type="button" value="Noir" onclick="noir();">
+      <input type="button" value="Sepia" onclick="sepia();">
+      <input type="button" value="Scifi" onclick="scifi();">
+
+      <video id="video" src="video.mp4" width="600" height="500" autoplay controls="controls"></video>
+      <canvas id="canvas" width="600" height="500"></canvas>
+  </div>
+
+	  <script src="js.js"></script>
+  </body>
 </html>
