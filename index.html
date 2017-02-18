@@ -1,21 +1,27 @@
 <!DOCTYPE html> 
-  <head>
+<html>
+<head>
   	<meta charset="utf-8">
-  </head>  
+</head>  
 
-  <body>
-  <div id="picture">
-	  <img id="image" src="shrek.jpg"/>
-      <canvas id="canvas1" width="404" height="600"></canvas>
-	  <canvas id="canvas2" width="404" height="600"></canvas>
-
-  </div>
-  <div id="controls">
-	<canvas id="canvas3" width="404" height="600"></canvas>
-	<canvas id="canvas4" width="404" height="600"></canvas>	
-	<canvas id="canvas5" width="404" height="600"></canvas>
-	<canvas id="canvas6" width="404" height="600"></canvas>
-  </div>
-	  <script src="main.js"></script>
-  </body>
+<body>
+	<div>Генерация нейронной сети. Введите кол-во узлов в соответствующую форму.</div>
+	</br>
+	<div>
+		<input id="amount" type="text" value="5"/> Кол-во нейронов
+	</div>
+	<div>
+		<input id="learn" type="button" value="Обучение"/>		
+		<input id="run" type="button" value="Работа"/>
+	</div>
+	</br>
+	<div>
+		
+	</div>
+	<div id="result"></div>
+	<script src="jquery-1.11.3.min.js"></script>
+	<script src="constants.js"></script>
+	<script src="functions.js"></script>
+	<script src="main.js"></script>
+</body>
 </html>
