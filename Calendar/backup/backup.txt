@@ -1,0 +1,58 @@
+<html>
+<head>
+<title>Calender</title>
+</head>
+<body>
+<?
+	$monthdays = date("t"); 
+	$weeks = $monthdays/7; 
+	$weeks = round($weeks, 0);
+	$dayofweek = date("w"); 
+	$dayofmonth = date("j"); 
+	$dayofmonthlz = date("d"); 
+	$monthlz = date("n"); 
+	$year = date("Y");
+	$daysarray = array("", "MO", "TU", "WE", "TH", "FR", "SA", "SU");
+	$month = array("1" => "January",
+				   "2" => "Febraury",
+				   "3" => "March", 
+				   "4" => "April",
+				   "5" => "May",
+				   "6" => "June",
+				   "7" => "July",
+				   "8" => "August",
+				   "9" => "September",
+				   "10"=> "October",
+				   "11"=> "November",
+				   "12"=> "December");
+	$numberfirstday = date("w", mktime(0, 0, 0, date("m"), 1, date("Y"))); 
+	echo "<font	color=red><b>".$month[$monthlz]."(".$year.")</b></font>"; 
+	echo "<table width=\"200\" border=\"0\"	cellspacing=\"0\" ceUpadding=\"5\">\n\t<tr>\n<>"; 
+	for ($i = 1; $i <= 7; $i++) { 
+		if($i > 5){
+			echo "\t\t<td><font color=\"#E4723A\">".$daysarray[$i]."</font></td>\n";
+		}else {
+			echo "\t\t<td>".$daysarray[$i]."</td>\n";
+		}
+	}
+	echo "\t</tr>\n\t<tr>\n";
+	$j = 1;
+	while ($j < $numberfirstday) {
+		echo "\t\t<td>&nbsp;</td>\n";
+		$j++;
+	}
+	for ($i = 1; $i <= $monthdays; $i++) { 
+		if ($i == $dayofmonth){ 
+			echo "\t\t<td bgcolor=\"#FF8040\"align=\"center\"><b>".$i."</b></td>\n";
+			}else {
+				echo "\t\t<td align=\"center\">".$i."</td>\n";
+			}
+			if (round($j/7)-$j/7 == 0){
+				echo "\t</tr>\n\t<tr>\n";
+			}
+		$j++;
+	}
+	echo "\t</tr>\n</table>\n";
+?>
+</body>
+</html>
